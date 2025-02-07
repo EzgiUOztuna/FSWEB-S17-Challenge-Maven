@@ -3,11 +3,13 @@ package com.workintech.spring17challenge.controller;
 import com.workintech.spring17challenge.entity.HighCourseGpa;
 import com.workintech.spring17challenge.entity.LowCourseGpa;
 import com.workintech.spring17challenge.entity.MediumCourseGpa;
+import com.workintech.spring17challenge.exceptions.ApiErrorResponse;
 import com.workintech.spring17challenge.model.*;
 import com.workintech.spring17challenge.validations.CourseValidation;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
