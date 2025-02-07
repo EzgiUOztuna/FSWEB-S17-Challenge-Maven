@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class CourseResponse {
     private Course course;
-    private double totalGpa;
+    private Double totalGpa;
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class Grade {
-    private int coefficient;
+    private Integer coefficient;
     private String note;
 
 }
