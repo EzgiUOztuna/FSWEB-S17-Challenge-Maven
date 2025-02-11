@@ -16,15 +16,15 @@ public class CourseValidation {
     public static void checkCourseExistence(List<Course> courses, String name, boolean existence){
         for(Course course : courses){
             if(course.getName().equals(name)){
-                if(!existence){
-                    throw new ApiException("Course is already exist: " + name, HttpStatus.BAD_REQUEST);
-                }
-                return; // Eğer kurs bulunduysa, işlem tamamlanmış demektir
+                existence = true;
             }
+        }
+        if(courses.isEmpty()){
+            return;
         }
 
         if(existence){
-            throw new ApiException("Course cannot find: " + name, HttpStatus.NOT_FOUND);
+            throw new ApiException("Course is already exist: " + name, HttpStatus.BAD_REQUEST);
         }
     }
 

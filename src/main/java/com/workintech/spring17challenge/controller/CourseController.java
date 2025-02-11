@@ -4,6 +4,7 @@ import com.workintech.spring17challenge.entity.HighCourseGpa;
 import com.workintech.spring17challenge.entity.LowCourseGpa;
 import com.workintech.spring17challenge.entity.MediumCourseGpa;
 import com.workintech.spring17challenge.exceptions.ApiErrorResponse;
+import com.workintech.spring17challenge.exceptions.ApiException;
 import com.workintech.spring17challenge.model.*;
 import com.workintech.spring17challenge.validations.CourseValidation;
 import jakarta.annotation.PostConstruct;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("/courses")
 public class CourseController {
     private List<Course> courses;
 
@@ -34,25 +36,26 @@ public class CourseController {
         courses = new ArrayList<>();
     }
 
-    @GetMapping("/courses")
+    @GetMapping
     public List<Course> getCourses(){
         return this.courses;
     }
 
-    @GetMapping("/courses/{name}")
-    public ResponseEntity<Course> getCoursesByName(@PathVariable String name){
-        //CourseValidation.isValid(name);
+    @GetMapping("/{name}")
+    public Course getCoursesByName(@PathVariable String name){
+       //CourseValidation.isValid(name);
         //CourseValidation.checkCourseExistence(courses, name, true);
         for(Course course: courses){
             if(course.getName().equalsIgnoreCase(name)){
-                return ResponseEntity.ok(course);
+                return course;
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        throw new ApiException("Course cannot found.", HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping("/courses")
-    public ResponseEntity<CourseResponse> saveCourse(@RequestBody Course course){
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CourseResponse saveCourse(@RequestBody Course course){
         //CourseValidation.checkCourseExistence(courses, course.getName(), false);
         courses.add(course);
 
@@ -66,11 +69,11 @@ public class CourseController {
         }
 
         CourseResponse courseResponse = new CourseResponse(course, totalGpa);
-        return new ResponseEntity<>(courseResponse, HttpStatus.CREATED);
+        return courseResponse;
 
     }
 
-    @PutMapping("/courses/{id}")
+    @PutMapping("/{id}")
     public CourseResponse updateCourse(@PathVariable int id, @RequestBody Course newCourse){
         //CourseValidation.isValidById(id);
 
@@ -91,7 +94,7 @@ public class CourseController {
         return null;
     }
 
-    @DeleteMapping("/courses/{id}")
+    @DeleteMapping("/{id}")
     public Course deleteCourse(@PathVariable int id){
         //CourseValidation.isValidById(id);
         //CourseValidation.checkCourseExistenceById(courses, id, true);
