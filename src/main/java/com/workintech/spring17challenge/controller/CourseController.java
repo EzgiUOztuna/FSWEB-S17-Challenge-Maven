@@ -54,13 +54,15 @@ public class CourseController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CourseResponse saveCourse(@RequestBody Course course){
+    //@ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CourseResponse>  saveCourse(@RequestBody Course course){
         //CourseValidation.checkCourseExistence(courses, course.getName(), false);
         courses.add(course);
 
         double totalGpa = 0;
-        if(course.getCredit() <= 2){
+        if(course.getCredit() == null){
+            throw new ApiException("Course cannot be null", HttpStatus.BAD_REQUEST);
+        } else if(course.getCredit() <= 2){
             totalGpa = (course.getGrade().getCoefficient() * course.getCredit() * lowCourseGpa.getGpa());
         } else if (course.getCredit() == 3) {
             totalGpa = (course.getGrade().getCoefficient() * course.getCredit() * mediumCourseGpa.getGpa());
@@ -69,7 +71,7 @@ public class CourseController {
         }
 
         CourseResponse courseResponse = new CourseResponse(course, totalGpa);
-        return courseResponse;
+        return new ResponseEntity<CourseResponse>(courseResponse, HttpStatus.CREATED);
 
     }
 
